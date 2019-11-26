@@ -201,6 +201,7 @@ public abstract class AbstractLocalDeployerSupport {
 		}
 
 		if (request.getResource() instanceof DockerResource) {
+			appPropertiesToUse.put("deployerId", deploymentId);
 			commands = this.dockerCommandBuilder.buildExecutionCommand(request, appPropertiesToUse, appInstanceNumber);
 		}
 		else {

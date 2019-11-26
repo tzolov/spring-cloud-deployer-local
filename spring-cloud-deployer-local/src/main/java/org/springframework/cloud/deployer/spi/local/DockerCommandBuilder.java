@@ -67,6 +67,8 @@ public class DockerCommandBuilder implements CommandBuilder {
 		commands.add("docker");
 		commands.add("run");
 
+		setNetwork(commands, appInstanceEnv);
+
 		// Add env vars
 		for (String env : appInstanceEnv.keySet()) {
 			commands.add("-e");
@@ -81,6 +83,8 @@ public class DockerCommandBuilder implements CommandBuilder {
 			} else {
 				commands.add(String.format("--name=%s", request.getDeploymentProperties().get(DOCKER_CONTAINER_NAME_KEY)));
 			}
+		} else {
+			commands.add(String.format("--name=%s", appInstanceEnv.get("deployerId")));
 		}
 
 		DockerResource dockerResource = (DockerResource) request.getResource();
@@ -123,5 +127,10 @@ public class DockerCommandBuilder implements CommandBuilder {
 			commands.add("-p");
 			commands.add(String.format("%s:%s", port, port));
 		}
+	}
+
+	private void setNetwork(List<String> commands, Map<String, String> appInstanceEnv) {
+		commands.add("--network");
+		commands.add("spring-cloud-dataflow-server_default");
 	}
 }
